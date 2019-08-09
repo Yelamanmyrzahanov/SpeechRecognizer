@@ -4,6 +4,12 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         tools:context=".view.GameFragment">
 
+	<data>
+		<variable
+				name="viewModel"
+				type="kz.djunglestones.speechrecognizer.viewModel.GameFragmentViewModel"/>
+	</data>
+
 	<androidx.constraintlayout.widget.ConstraintLayout
 			android:id="@+id/gameConstraint"
 			android:layout_width="match_parent"
