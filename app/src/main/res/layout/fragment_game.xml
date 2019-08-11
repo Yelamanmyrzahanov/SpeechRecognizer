@@ -33,6 +33,7 @@
 				app:layout_constraintBottom_toTopOf="@+id/btn_mic"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintEnd_toEndOf="parent"
+				app:imageUrl="@{viewModel.animal}"
 				android:layout_marginBottom="32dp"
 				android:layout_marginTop="32dp"/>
 

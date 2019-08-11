@@ -16,6 +16,12 @@ enum class AnimalApiStatus{
 }
 
 class GameFragmentViewModel : ViewModel(){
+    private val _pos = MutableLiveData<Int>().apply {
+        value = 0
+    }
+
+    val pos : LiveData<Int>
+        get() = _pos
 
 
 
@@ -30,26 +36,41 @@ class GameFragmentViewModel : ViewModel(){
     private val _animals = MutableLiveData<List<Animal>>()
 
     // The external LiveData interface to the property is immutable, so only this class can modify
-    val animals: LiveData<List<Animal>>
-        get() = _animals
+    private val _animal = MutableLiveData<Animal>()
+    val animal: LiveData<Animal>
+        get() =  _animal
 
     private var viewModelJob = Job()
 
     // the Coroutine runs using the Main (UI) dispatcher
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
+    init {
+        getAnimals()
+    }
+
     private fun getAnimals(){
         coroutineScope.launch {
-            var getAnimalsDeferred = AnimalApi.retrofitService.getAnimals()
+            val getAnimalsDeferred = AnimalApi.retrofitService.getAnimals()
             try {
                 _status.value = AnimalApiStatus.LOADING
                 // this will run on a thread managed by Retrofit
                 val listResult = getAnimalsDeferred.await()
                 _status.value = AnimalApiStatus.DONE
                 _animals.value = listResult
+                _animal.value = listResult.get(0)
             }catch (e: Exception){
                 _status.value = AnimalApiStatus.ERROR
                 _animals.value = ArrayList()
+            }
+        }
+    }
+
+    fun incrementPos(){
+        _pos.value?.let { a->
+            if (a<22){
+                _pos.value = a+1
+                _animal.value = _animals.value?.get(_pos.value!!.toInt())
             }
         }
     }
